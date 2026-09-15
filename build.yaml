@@ -1,0 +1,21 @@
+---
+name: "HDHomeRun TV Guide"
+guid: "6277ad20-237b-493a-acec-e134d424a266"
+version: "1.0.0.0"
+targetAbi: "12.0.0.0"
+framework: "net10.0"
+overview: "Feeds Jellyfin's XMLTV listings provider from your HDHomeRun tuners' guide data"
+description: >
+  Discovers the HDHomeRun tuners already configured in Jellyfin's Live TV settings
+  (or manually specified addresses), reads each tuner's local DeviceAuth token, and
+  points Jellyfin's built-in XMLTV listings provider at SiliconDust's official guide
+  feed for those devices. Runs entirely inside the Jellyfin server - no external
+  containers or services required.
+category: "Live TV"
+owner: "benfoden"
+artifacts:
+- "Jellyfin.Plugin.HdhrTvGuide.dll"
+changelog: >
+  1.0.0.0
+  - Initial release.
+---

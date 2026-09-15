@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HDHomeRun TV Guide</title>
+</head>
+<body>
+    <div id="HdhrTvGuideConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="HdhrTvGuideConfigForm">
+                    <div class="verticalSection">
+                        <h2>HDHomeRun TV Guide</h2>
+                        <p>
+                            Points Jellyfin's XMLTV listings provider at SiliconDust's guide feed for your
+                            HDHomeRun tuners. Each sync reads a fresh DeviceAuth token from every tuner
+                            below and updates the listings provider - this runs automatically on the
+                            "Sync HDHomeRun TV Guide" schedule (Dashboard &gt; Scheduled Tasks &gt; Live TV)
+                            and once whenever you save this page.
+                        </p>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label>
+                            <input id="UseConfiguredTuners" name="UseConfiguredTuners" type="checkbox" is="emby-checkbox" />
+                            <span>Include tuners already configured under Live TV &gt; Tuner Devices</span>
+                        </label>
+                    </div>
+                    <div class="inputContainer">
+                        <input id="ManualTunerAddresses" name="ManualTunerAddresses" type="text" is="emby-input" label="Additional tuner addresses" />
+                        <div class="fieldDescription">Comma-separated IP addresses or hostnames of any HDHomeRun tuners not already configured in Jellyfin, e.g. 192.168.1.50, 192.168.1.51</div>
+                    </div>
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            (function () {
+                var pluginId = '6277ad20-237b-493a-acec-e134d424a266';
+
+                document.querySelector('#HdhrTvGuideConfigPage')
+                    .addEventListener('pageshow', function () {
+                        Dashboard.showLoadingMsg();
+                        ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                            document.querySelector('#UseConfiguredTuners').checked = config.UseConfiguredTuners;
+                            document.querySelector('#ManualTunerAddresses').value = config.ManualTunerAddresses || '';
+                            Dashboard.hideLoadingMsg();
+                        });
+                    });
+
+                document.querySelector('#HdhrTvGuideConfigForm')
+                    .addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        Dashboard.showLoadingMsg();
+                        ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                            config.UseConfiguredTuners = document.querySelector('#UseConfiguredTuners').checked;
+                            config.ManualTunerAddresses = document.querySelector('#ManualTunerAddresses').value;
+                            ApiClient.updatePluginConfiguration(pluginId, config).then(function (result) {
+                                Dashboard.processPluginConfigurationUpdateResult(result);
+                            });
+                        });
+                        return false;
+                    });
+            })();
+        </script>
+    </div>
+</body>
+</html>
