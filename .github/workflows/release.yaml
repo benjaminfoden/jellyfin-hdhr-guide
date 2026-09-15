@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   check-version:
@@ -42,11 +44,14 @@ jobs:
     needs: check-version
     if: needs.check-version.outputs.should_release == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.create.outputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Create tag and release
+        id: create
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.check-version.outputs.version }}
@@ -60,3 +65,11 @@ jobs:
           git push origin "$TAG"
 
           gh release create "$TAG" --title "$TAG" --notes-file /tmp/changelog.md
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+  publish:
+    needs: release
+    uses: ./.github/workflows/publish.yaml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
+    secrets: inherit
