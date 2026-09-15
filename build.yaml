@@ -1,7 +1,7 @@
 ---
 name: "HDHomeRun TV Guide"
 guid: "6277ad20-237b-493a-acec-e134d424a266"
-version: "1.0.0.1"
+version: "1.0.1.0"
 targetAbi: "12.0.0.0"
 framework: "net10.0"
 overview: "Feeds Jellyfin's XMLTV listings provider from your HDHomeRun tuners' guide data"
@@ -16,7 +16,7 @@ owner: "benfoden"
 artifacts:
 - "Jellyfin.Plugin.HdhrTvGuide.dll"
 changelog: >
-  1.0.0.1
+  1.0.1.0
   - Initial Manifest Release
   1.0.0.0
   - Initial release.
